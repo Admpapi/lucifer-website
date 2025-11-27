@@ -1,36 +1,27 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShoppingBag, Settings, HelpCircle, LogOut } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
-import OrderHistory from "@/components/dashboard/order-history";
-import ProfileSection from "@/components/dashboard/profile-section";
-import SupportTickets from "@/components/dashboard/support-tickets";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  useEffect(() {
+  useEffect(function redirectIfUnauthenticated() {
     if (status === "unauthenticated") {
       router.push("/auth/login");
     }
   }, [status, router]);
 
   if (status === "loading") {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h2>Loading...</h2>
-        </div>
-      </div>
-    );
+    return <div className="flex items-center justify-center min-h-screen"><h2>Loading...</h2></div>;
   }
 
   if (!session) {
@@ -38,99 +29,71 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-8">
+      <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Welcome, {session.user?.name}!</h1>
+            <h1 className="text-3xl font-bold text-white">Welcome, {session.user?.name}</h1>
             <p className="text-slate-400">{session.user?.email}</p>
           </div>
-          <Button
-            variant="outline"
-            onClick={() => signOut({ callbackUrl: "/auth/login" })}
-            className="flex items-center gap-2"
-          >
+          <Button variant="outline" onClick={() => signOut({ callbackUrl: "/auth/login" })} className="flex items-center gap-2">
             <LogOut className="h-4 w-4" />
             Logout
           </Button>
         </div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="orders" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 md:grid-cols-4">
-            <TabsTrigger value="orders" className="flex items-center gap-2">
-              <ShoppingBag className="h-4 w-4" />
-              <span className="hidden sm:inline">Orders</span>
-            </TabsTrigger>
-            <TabsTrigger value="profile" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              <span className="hidden sm:inline">Profile</span>
-            </TabsTrigger>
-            <TabsTrigger value="support" className="flex items-center gap-2">
-              <HelpCircle className="h-4 w-4" />
-              <span className="hidden sm:inline">Support</span>
-            </TabsTrigger>
-            {session.user?.role !== "USER" && (
-              <TabsTrigger value="admin">
-                <span className="hidden sm:inline">Admin</span>
-                <span className="sm:hidden">Admin</span>
-              </TabsTrigger>
-            )}
-          </TabsList>
+        <Card>
+          <CardHeader>
+            <CardTitle>Dashboard</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">Welcome to your dashboard! Here you can manage your account, view orders, and contact support.</p>
 
-          <TabsContent value="orders" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Order History</CardTitle>
-                <CardDescription>View and track your orders</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <OrderHistory />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="profile" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Profile Settings</CardTitle>
-                <CardDescription>Manage your account information</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ProfileSection />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="support" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Support Tickets</CardTitle>
-                <CardDescription>Create and manage support tickets</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <SupportTickets />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {session.user?.role !== "USER" && (
-            <TabsContent value="admin" className="space-y-4">
+            <div className="grid md:grid-cols-3 gap-4 mt-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Admin Dashboard</CardTitle>
-                  <CardDescription>Manage your store</CardDescription>
+                  <CardTitle className="text-lg">My Orders</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Link href="/admin">
-                    <Button>Go to Admin Panel</Button>
-                  </Link>
+                  <p className="text-2xl font-bold">0</p>
+                  <p className="text-sm text-muted-foreground">orders placed</p>
                 </CardContent>
               </Card>
-            </TabsContent>
-          )}
-        </Tabs>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Profile</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm">Manage your account information and preferences</p>
+                  <Button className="mt-4 bg-primary hover:bg-primary/90">Edit Profile</Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Support</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm">Need help? Create a support ticket</p>
+                  <Button className="mt-4 bg-primary hover:bg-primary/90">Open Ticket</Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            {session.user?.role !== "USER" && (
+              <Card className="mt-6 bg-blue-50 border-blue-200">
+                <CardHeader>
+                  <CardTitle className="text-lg">Admin Panel</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm">You have admin privileges. Access the admin dashboard to manage the store.</p>
+                  <Button className="mt-4 bg-blue-600 hover:bg-blue-700">Admin Dashboard</Button>
+                </CardContent>
+              </Card>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
