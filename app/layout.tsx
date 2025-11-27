@@ -10,6 +10,7 @@ import Snowfall from "@/components/snowfall"
 import Chatbot from "@/components/chatbot"
 import AnimatedBackground from "@/components/animated-background"
 import CursorTrail from "@/components/cursor-trail"
+import PurchaseNotification from "@/components/purchase-notification"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -42,6 +43,7 @@ export default function RootLayout({
             <Snowfall />
             <WelcomePopup />
             <Chatbot />
+            <PurchaseNotification />
             <div className="min-h-screen bg-background flex flex-col">
               <SiteHeader />
               <main className="flex-grow">{children}</main>
