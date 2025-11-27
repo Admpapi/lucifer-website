@@ -47,18 +47,15 @@ export default function PurchaseNotification() {
   };
 
   useEffect(() => {
-    // Generate first notification after 2 seconds
-    const initialTimer = setTimeout(() => {
-      generateNotification();
-    }, 2000);
+    // Generate first notification immediately
+    generateNotification();
 
-    // Generate new notifications every 8-12 seconds
+    // Generate new notifications every 1 second
     const interval = setInterval(() => {
       generateNotification();
-    }, Math.random() * 4000 + 8000);
+    }, 1000);
 
     return () => {
-      clearTimeout(initialTimer);
       clearInterval(interval);
     };
   }, []);
