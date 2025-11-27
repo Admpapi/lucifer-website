@@ -15,7 +15,6 @@ import AdminUsers from "@/components/admin/admin-users";
 import AdminAnalytics from "@/components/admin/admin-analytics";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 export default function AdminPage() {
   const { data: session, status } = useSession();

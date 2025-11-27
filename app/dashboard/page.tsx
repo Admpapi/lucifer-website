@@ -9,7 +9,6 @@ import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
