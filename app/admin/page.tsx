@@ -1,7 +1,5 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -15,6 +13,9 @@ import AdminProducts from "@/components/admin/admin-products";
 import AdminOrders from "@/components/admin/admin-orders";
 import AdminUsers from "@/components/admin/admin-users";
 import AdminAnalytics from "@/components/admin/admin-analytics";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default function AdminPage() {
   const { data: session, status } = useSession();

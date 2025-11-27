@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "prod": "next build && next start --hostname yxroscripts.nl -p 80"
+    "prod": "next build && next start --hostname yxroscripts.nl -p 80",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
